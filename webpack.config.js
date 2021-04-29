@@ -23,7 +23,7 @@ module.exports = {
         path: path.resolve(__dirname, 'docs'),
         clean: true,
     },
-    entry: path.resolve(__dirname, './src/index.js'),
+    entry: path.resolve(__dirname, './src/js/index.js'),
     module: {
         rules: [
             {
