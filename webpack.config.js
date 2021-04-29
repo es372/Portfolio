@@ -17,22 +17,24 @@ module.exports = {
         compress: true,
         port: 8080,
     },
+
     output: {
         filename: 'js/bundle.js',
         path: path.resolve(__dirname, 'docs'),
         clean: true,
     },
+    entry: path.resolve(__dirname, './src/index.js'),
     module: {
         rules: [
             {
-                test: /\.(jpe?g|png|gif|svg)$/i,
-                type: 'asset',
-                enforce: 'pre',
-                use: {
-                    loader: 'url-loader',
-                },
-            },
-        ],
+                test: /\.(js)$/,
+                exclude: /node_modules/,
+                use: ["babel-loader", "eslint-loader"]
+            }
+        ]
+    },
+    resolve: {
+        extensions: ['*', '.js']
     },
     plugins: [
         new ImageMinimizerPlugin({
