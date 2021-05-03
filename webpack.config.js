@@ -1,76 +1,65 @@
-const CopyPlugin = require("copy-webpack-plugin");
+const CopyPlugin = require('copy-webpack-plugin');
 const path = require('path');
-const ImageMinimizerPlugin = require('image-minimizer-webpack-plugin');
 
 module.exports = {
     // Set the mode to development or production
     mode: 'development',
     watch: true,
+
     // Control how source maps are generated
     devtool: 'inline-source-map',
+
     entry: {
         index: './src/js/index.js',
     },
-    devServer: {
-        contentBase: path.join(__dirname, 'docs'),
-        open: true,
-        compress: true,
-        port: 8080,
-    },
-
     output: {
-        filename: 'js/bundle.js',
         path: path.resolve(__dirname, 'docs'),
-        clean: true,
+        filename: 'js/bundle.js',
     },
-    entry: path.resolve(__dirname, './src/js/index.js'),
     module: {
         rules: [
             {
                 test: /\.(js)$/,
                 exclude: /node_modules/,
-                use: ["babel-loader", "eslint-loader"]
-            }
-        ]
-    },
-    resolve: {
-        extensions: ['*', '.js']
-    },
-    plugins: [
-        new ImageMinimizerPlugin({
-            minimizerOptions: {
-                // Lossless optimization with custom option
-                // Feel free to experiment with options for better result for you
-                plugins: [
-                    ['gifsicle', { interlaced: true }],
-                    ['mozjpeg', { quality: 50 }],
-                    ['jpegtran', { progressive: true,quality: [0.5, 0.5] }],
-                    ['optipng', { optimizationLevel: 5 }],
-                    [
-                        'svgo',
-                        {
-                            plugins: [
-                                {
-                                    removeViewBox: false,
-                                },
-                            ],
-                        },
-                    ],
+                use: ['babel-loader', 'eslint-loader'],
+            },
+            {
+                test: /\.s[ac]ss$/i,
+                use: [
+                    // Creates `style` nodes from JS strings
+                    "style-loader",
+                    // Translates CSS into CommonJS
+                    "css-loader",
+                    // Compiles Sass to CSS
+                    "sass-loader",
                 ],
             },
-        }),
+        ],
+    },
+    resolve: {
+        extensions: ['*', '.js'],
+    },
+    plugins: [
         new CopyPlugin({
             patterns: [
-                { from: "src",
+                {
+                    from: 'src',
                     globOptions: {
                         ignore: [
-                            '**/js/index.js',
-                        ]
-                    }
+                            '**/js/*',
+                        ],
+                    },
                 }],
             options: {
                 concurrency: 100,
             },
         }),
     ],
+    devServer: {
+        contentBase: path.join(__dirname, 'docs'),
+        open: true,
+        compress: true,
+        port: 8080,
+
+    },
 };
